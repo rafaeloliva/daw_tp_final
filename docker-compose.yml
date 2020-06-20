@@ -1,0 +1,55 @@
+# YAML archivo para componer los servicios de SmartHome 2020 R.O.
+# https://docs.docker.com/compose/yml/
+# Version
+version: '3'
+# Servicios
+services:
+# Server mysql - 5.7
+    mysql-server:
+        image: mysql:5.7
+        hostname: mysql-server
+        container_name: mysql-server
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: userpass
+        volumes:
+        - ./db/dumps:/docker-entrypoint-initdb.d 
+        - ./db/data:/var/lib/mysql
+        networks:
+        - mysql-net
+# PHP para administracion de la base de datos
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        hostname: phpmyadmin
+        container_name: phpmyadmin
+        restart: always
+        environment:
+            PMA_HOST: mysql-server
+            PMA_PORT:             3306
+            MYSQL_ROOT_PASSWORD:  userpass
+        networks:
+        - mysql-net
+        ports:
+        - "8085:80"
+        depends_on:
+        -   mysql-server
+# Node-js para el backend
+    node-app:
+        image: abassi/nodejs-server:10.0-dev
+        hostname: nodejs-container
+        container_name: nodejs-container
+        restart: always
+        volumes:
+        -  .:/home/node/app
+        #/home/node/app/ws/index.js
+        networks:
+        -  mysql-net
+        depends_on: 
+        -   mysql-server
+        ports:
+        - "8000:3000"
+        command:  nodemon ws/index.js
+# Red interna
+networks:
+    mysql-net:
+        driver: bridge
