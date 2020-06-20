@@ -89,7 +89,7 @@ class Main implements GETResponseListener, EventListenerObject, POSTResponseList
                 console.log("presionado boton:"+elem.id);
                 this.myf.requestGET("ws/devices?filter=1",this);
                 break;
-            case "bbPersianas":
+            case "bPersianas":
                 console.log("presionado boton:"+elem.id);
                 this.myf.requestGET("ws/devices?filter=2",this);
                 break;
@@ -130,6 +130,19 @@ class Main implements GETResponseListener, EventListenerObject, POSTResponseList
       this.view = new ViewMainPage(this.myf);
 
       this.myf.requestGET("devices",this);
+
+      // en clase se resolvió con configClick() pero lo hacemos mas crudo
+      // no se toca el MyFramework.ts de Ej12
+      // primero handler para boton "bTodos"
+      let b:HTMLElement = this.myf.getElementById("bTodos");  
+      b.addEventListener("click",this);
+      // luego para boton "bLuces"
+      b = this.myf.getElementById("bLuces");
+      b.addEventListener("click",this);
+      // finalment para boton "bPersianas"
+      b = this.myf.getElementById("bPersianas");
+      b.addEventListener("click",this);
+    
     } 
 } 
  
