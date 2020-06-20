@@ -78,11 +78,26 @@ class Main implements GETResponseListener, EventListenerObject, POSTResponseList
 
     handleEvent(evt:Event):void
     {
-        let sw: HTMLElement = this.myf.getElementByEvent(evt);
-        console.log("click en device:"+sw.id);
-
-        let data:object = {"id":sw.id,"state":this.view.getSwitchStateById(sw.id)};
-        this.myf.requestPOST("devices",data,this);
+        let elem: HTMLElement = this.myf.getElementByEvent(evt);
+        // Elegimos de acuerdo al boton presionado de filtrado
+        switch(elem.id){
+            case "bTodos":
+                console.log("presionado boton:"+elem.id);
+                this.myf.requestGET("ws/devices?filter=0",this);
+                break;
+            case "bLuces":
+                console.log("presionado boton:"+elem.id);
+                this.myf.requestGET("ws/devices?filter=1",this);
+                break;
+            case "bbPersianas":
+                console.log("presionado boton:"+elem.id);
+                this.myf.requestGET("ws/devices?filter=2",this);
+                break;
+            default:
+                console.log("click en devices:"+elem.id);
+                let data:object = {"id":elem.id,"state":this.view.getSwitchStateById(elem.id)};
+                this.myf.requestPOST("devices",data,this);
+        }
     }
 
     handleGETResponse(status:number,response:string):void{
