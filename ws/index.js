@@ -6,16 +6,8 @@ app.use(express.json()); // para parsear application/json
 app.use(express.static('.')); // para servir archivos estaticos
 
 
-//EJ 12
-app.get('/devices', function(req, res, next) {
-    mysql.query('SELECT * FROM Devices', function(err, rta, field) {
-        if (err) {
-            res.send(err).status(400);
-            return;
-        }
-        res.send(rta).status(200);
-    });
-});
+//EJ 12 - modificamos para que un get responda por tipo, no solo por id
+// este es el original por id
 app.get('/devices/:id', function(req, res, next) {
     mysql.query('SELECT * FROM Devices WHERE id=?', [req.params.id], function(err, rta, field) {
         if (err) {
@@ -23,6 +15,27 @@ app.get('/devices/:id', function(req, res, next) {
             return;
         }
         res.send(rta);
+    });
+});
+// este el modificado por tipo
+app.get('/ws/devices', function(req, res, next) {
+    var tipo ='';
+    switch(req.query.filter){
+        case '1':
+            tipo = ' WHERE type=0';
+            break;
+        case '2':
+            tipo = ' WHERE type=1';
+            break;
+        default:
+            break;
+    }
+    mysql.query('SELECT * FROM Devices'+tipo, function(err, rta, field) {
+        if (err) {
+            res.send(err).status(400);
+            return;
+        }
+        res.send(rta); //.status(200);
     });
 });
 app.post('/devices', function(req, res, next) {

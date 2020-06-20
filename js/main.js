@@ -54,10 +54,26 @@ class ViewMainPage {
 }
 class Main {
     handleEvent(evt) {
-        let sw = this.myf.getElementByEvent(evt);
-        console.log("click en device:" + sw.id);
-        let data = { "id": sw.id, "state": this.view.getSwitchStateById(sw.id) };
-        this.myf.requestPOST("devices", data, this);
+        let elem = this.myf.getElementByEvent(evt);
+        // Elegimos de acuerdo al boton presionado de filtrado
+        switch (elem.id) {
+            case "bTodos":
+                console.log("presionado boton:" + elem.id);
+                this.myf.requestGET("ws/devices?filter=0", this);
+                break;
+            case "bLuces":
+                console.log("presionado boton:" + elem.id);
+                this.myf.requestGET("ws/devices?filter=1", this);
+                break;
+            case "bPersianas":
+                console.log("presionado boton:" + elem.id);
+                this.myf.requestGET("ws/devices?filter=2", this);
+                break;
+            default:
+                console.log("click en devices:" + elem.id);
+                let data = { "id": elem.id, "state": this.view.getSwitchStateById(elem.id) };
+                this.myf.requestPOST("devices", data, this);
+        }
     }
     handleGETResponse(status, response) {
         if (status == 200) {
@@ -80,6 +96,17 @@ class Main {
         this.myf = new MyFramework();
         this.view = new ViewMainPage(this.myf);
         this.myf.requestGET("devices", this);
+        // en clase se resolvió con configClick() pero lo hacemos mas crudo
+        // no se toca el MyFramework.ts de Ej12
+        // primero handler para boton "bTodos"
+        let b = this.myf.getElementById("bTodos");
+        b.addEventListener("click", this);
+        // luego para boton "bLuces"
+        b = this.myf.getElementById("bLuces");
+        b.addEventListener("click", this);
+        // finalment para boton "bPersianas"
+        b = this.myf.getElementById("bPersianas");
+        b.addEventListener("click", this);
     }
 }
 window.onload = () => {
