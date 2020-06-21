@@ -19,8 +19,9 @@ carpeta local deseada utilizando:
 git clone https://github.com/rafaeloliva/daw_tp_final
 ```
 
-y luego ejecutar el siguiente comando con un terminal desde la carpeta seleccionada:
+y luego ejecutar los siguientes comandos con un terminal desde la carpeta seleccionada:
 ```sh
+cd daw_tp_final
 docker-compose up
 ```
 Esperar que termine de cargar, y luego 
@@ -30,6 +31,19 @@ Para detener ordenadamente la aplicación, desde otro terminal ejecutar:
 ```sh
 docker-compose down
 ```
+
+# Notas / Known issues
+-Testeado en maquinas con Ubuntu 18.04, previamente ejecutar el Software Updater.
+
+-Aun así puede requerir instalación de docker-compose, con sudo apt install docker-compose
+
+-Se testeó en una máquina con Ubuntu 16.04 pero docker-compose no permitía ejecutar
+la secuencia, aun bajando la Versión YAML a 2 u omitiéndola completamente. 
+
+-Puede ocurrir que el arranque se salga de secuencia, el último container debe ser el 
+de node. Si no ocurre, correr desde otro terminal docker-compose down, y luego nuevamente
+docker-compose up.
+
 
 # Contribuir
 
